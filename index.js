@@ -12,8 +12,10 @@ class TimerMixin {
       return {
         _mode: 'countup',
         _evNamesDict: evNamesDict,
-        time: null,
+        time: 0,
+        _lastTime: 0,
         _lastStarted: null,
+        _lastPassed: null,
         _tick: tick
       };
     };
@@ -27,7 +29,7 @@ class TimerMixin {
     };
   }
   _created() {
-    ["start", "pause", "resume", "stop", "reset"].forEach(evKey => {
+    ["reset", "stop", "reset"].forEach(evKey => {
       if (this.$data._evNamesDict[evKey] != null) {
         let evNames = this.$data._evNamesDict[evKey];
         if (typeof evNames === "string") {
@@ -45,34 +47,38 @@ class TimerMixin {
     });
   }
   _start() {
-    if (this._handler != null) {
+    if (this.$data._handler != null) {
       return
     }
-    this._lastStarted = Date.now()
-    this._lastPassed = 0
-    this._handler = setInterval(() => {
-      this._lastPassed = Date.now() - this._lastStarted
+    this.$data._lastStarted = Date.now()
+    this.$data._lastPassed = 0
+    this.$data._handler = setInterval(() => {
+      this.$data._lastPassed = Date.now() - this.$data._lastStarted
+      this.time = this.$data._lastTime + this.$data._lastPassed
       this.$emit('tick', {
-        current: this.time + this._lastPassed
+        current: this.time
       })
-    }, this._tick)
+    }, this.$data._tick)
   }
   _stop() {
-    if (this._handler == null) {
+    if (this.$data._handler == null) {
       return
     }
-    this.time = this.time + Date.now() - this._lastStarted
-    this._lastStarted = null
-    this._lastPassed = null
-    clearInterval(this._handler)
+    this.$data._lastTime = this.$data._lastTime + Date.now() - this.$data._lastStarted
+    this.$data._lastStarted = null
+    this.$data._lastPassed = null
+    clearInterval(this.$data._handler)
+    this.$data._handler = null
   }
   _reset() {
-    if (this._handler != null) {
-      this._lastStarted = null
-      this._lastPassed = null
-      clearInterval(this._handler)
+    if (this.$data._handler != null) {
+      this.$data._lastStarted = null
+      this.$data._lastPassed = null
+      clearInterval(this.$data._handler)
+      this.$data._handler = null
     }
     this.time = 0
+    this.$data._lastTime = 0
   }
 }
 
@@ -80,7 +86,7 @@ var myMixin = new TimerMixin({
   start: "start",
   stop: "stop",
   reset: "reset",
-  tick: 300
+  tick: 33
 });
 
 var app = new Vue({
