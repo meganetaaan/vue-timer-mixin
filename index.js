@@ -1,28 +1,3 @@
-class Timer {
-  constructor(onTick) {
-    this.id = "hoge";
-    this.sec = 0;
-    this.handler = null;
-    this.onTick = onTick;
-  }
-  start() {
-    if (this.handler != null) {
-      return;
-    }
-    this.handler = setInterval(() => {
-      this.onTick(this.sec++);
-    }, 1000);
-  }
-  stop() {
-    clearInterval(this.handler);
-    this.handler = null;
-  }
-  reset() {
-    this.stop();
-    this.sec = 0;
-    this.onTick(this.sec);
-  }
-}
 class TimerMixin {
   constructor(param) {
     const evNamesDict = {
@@ -35,9 +10,10 @@ class TimerMixin {
     const tick = param.tick;
     this.data = function() {
       return {
+        _mode: 'countup',
         _evNamesDict: evNamesDict,
-        timer: null,
-        time: 0,
+        time: null,
+        _lastStarted: null,
         _tick: tick
       };
     };
@@ -50,7 +26,6 @@ class TimerMixin {
       reset: this._reset
     };
   }
-
   _created() {
     ["start", "pause", "resume", "stop", "reset"].forEach(evKey => {
       if (this.$data._evNamesDict[evKey] != null) {
@@ -70,74 +45,46 @@ class TimerMixin {
     });
   }
   _start() {
-      if (this.timer == null) {
-        this.timer = new Timer(time => {
-          this.time = time;
-        });
-      }
-      this.timer.start();
+    if (this._handler != null) {
+      return
+    }
+    this._lastStarted = Date.now()
+    this._lastPassed = 0
+    this._handler = setInterval(() => {
+      this._lastPassed = Date.now() - this._lastStarted
+      this.$emit('tick', {
+        current: this.time + this._lastPassed
+      })
+    }, this._tick)
   }
-  _pause() {}
-  _resume() {}
   _stop() {
-      if (this.timer != null) {
-        this.timer.stop();
-      }
+    if (this._handler == null) {
+      return
+    }
+    this.time = this.time + Date.now() - this._lastStarted
+    this._lastStarted = null
+    this._lastPassed = null
+    clearInterval(this._handler)
   }
   _reset() {
-      if (this.timer != null) {
-        this.timer.reset();
-      }
-  }
-
-  _data() {
-    return {
-      timer: null,
-      time: 0
-    };
+    if (this._handler != null) {
+      this._lastStarted = null
+      this._lastPassed = null
+      clearInterval(this._handler)
+    }
+    this.time = 0
   }
 }
 
-var myMixin = {
-  created: function() {
-    this.$on("start", this.onStart);
-    this.$on("stop", this.onStop);
-    this.$on("reset", this.onReset);
-  },
-  data: function() {
-    timer: null;
-    time: 0;
-  },
-  methods: {
-    onStart: function() {
-      if (this.timer == null) {
-        this.timer = new Timer(time => {
-          this.time = time;
-        });
-      }
-      this.timer.start();
-    },
-    onStop: function() {
-      if (this.timer != null) {
-        this.timer.stop();
-      }
-    },
-    onReset: function() {
-      if (this.timer != null) {
-        this.timer.reset();
-      }
-    }
-  }
-};
-
-var myMixin2 = new TimerMixin({
+var myMixin = new TimerMixin({
   start: "start",
   stop: "stop",
-  reset: "reset"
+  reset: "reset",
+  tick: 300
 });
 
 var app = new Vue({
-  mixins: [myMixin2],
+  mixins: [myMixin],
   name: "World",
   el: "#app",
   template: `
