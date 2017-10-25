@@ -1,8 +1,23 @@
 {
+  "name": "vue-timer-mixin",
+  "version": "0.1.0",
+  "description": "A Vue.js mixin adding simple countup-timer feature.",
+  "main": "index.js",
   "scripts": {
     "serve": "live-server"
   },
-  "dependencies": {
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/meganetaaan/vue-timer-mixin.git"
+  },
+  "keywords": ["Vue.js", "timer", "mixin"],
+  "author": "Shinya Ishikawa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meganetaaan/vue-timer-mixin/issues"
+  },
+  "homepage": "https://github.com/meganetaaan/vue-timer-mixin#readme",
+  "devDependencies": {
     "live-server": "^1.2.0"
   }
 }
