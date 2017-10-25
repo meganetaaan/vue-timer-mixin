@@ -10,7 +10,11 @@
     "type": "git",
     "url": "git+ssh://git@github.com/meganetaaan/vue-timer-mixin.git"
   },
-  "keywords": ["Vue.js", "timer", "mixin"],
+  "keywords": [
+    "Vue.js",
+    "timer",
+    "mixin"
+  ],
   "author": "Shinya Ishikawa",
   "license": "MIT",
   "bugs": {
@@ -18,6 +22,12 @@
   },
   "homepage": "https://github.com/meganetaaan/vue-timer-mixin#readme",
   "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "live-server": "^1.2.0"
   }
 }
