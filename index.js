@@ -1,4 +1,5 @@
-/* global Vue, TimerMixin */
+import Vue from 'vue'
+import TimerMixin from './lib/vue-timer-mixin.js'
 var myMixin = new TimerMixin({
   start: 'start',
   stop: 'stop',

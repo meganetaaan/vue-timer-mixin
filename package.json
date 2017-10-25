@@ -4,7 +4,7 @@
   "description": "A Vue.js mixin adding simple countup-timer feature.",
   "main": "lib/vue-timer-mixin.js",
   "scripts": {
-    "serve": "live-server"
+    "dev": "webpack-dev-server --entry ./index.js --output-filename ./dist/bundle.js  --resolve-alias vue=\"vue/dist/vue.js\""
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,10 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
-    "live-server": "^1.2.0"
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
+  },
+  "dependencies": {
+    "vue": "^2.5.2"
   }
 }
