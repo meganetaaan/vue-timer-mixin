@@ -16,7 +16,8 @@ class TimerMixin {
         _lastTime: 0,
         _lastStarted: null,
         _lastPassed: null,
-        _tick: tick
+        _tick: tick,
+        _handler: null
       };
     };
     this.created = this._created;
@@ -38,8 +39,10 @@ class TimerMixin {
         if (Array.isArray(evNames)) {
           evNames.forEach(evName => {
             this.$on(evName, function() {
-              this.$emit("timer" + evName, this.$data.timer);
               this[evKey].apply(this);
+              this.$emit("timer" + evName, {
+                time: this.time
+              });
             });
           });
         }
@@ -56,7 +59,7 @@ class TimerMixin {
       this.$data._lastPassed = Date.now() - this.$data._lastStarted
       this.time = this.$data._lastTime + this.$data._lastPassed
       this.$emit('tick', {
-        current: this.time
+        time: this.time
       })
     }, this.$data._tick)
   }
