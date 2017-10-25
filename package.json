@@ -2,7 +2,7 @@
   "name": "vue-timer-mixin",
   "version": "0.1.0",
   "description": "A Vue.js mixin adding simple countup-timer feature.",
-  "main": "index.js",
+  "main": "lib/vue-timer-mixin.js",
   "scripts": {
     "serve": "live-server"
   },
